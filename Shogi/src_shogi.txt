@@ -1,0 +1,3 @@
+"C:\\Users\\Nefeli\\Documents\\JCreator LE\\MyProjects\\Shogi\\src\\ImagePanel.java"
+"C:\\Users\\Nefeli\\Documents\\JCreator LE\\MyProjects\\Shogi\\src\\Piece.java"
+"C:\\Users\\Nefeli\\Documents\\JCreator LE\\MyProjects\\Shogi\\src\\Shogi.java"

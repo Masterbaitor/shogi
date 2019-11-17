@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<workspace>
+	<settings>
+		<label>Shogi</label>
+	</settings>
+	<users>
+		<user>
+			<path>Shogi.jcu</path>
+		</user>
+	</users>
+	<projects>
+		<project>
+			<path>Shogi.jcp</path>
+		</project>
+	</projects>
+</workspace>
