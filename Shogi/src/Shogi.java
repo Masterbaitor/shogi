@@ -20,7 +20,7 @@ public class Shogi extends JFrame {
 
 	int width=9,height=9;
 
-	public static String ResourcesDir = System.getProperty("user.dir")+"\\Shogi\\resources\\";
+	public static String ResourcesDir = System.getProperty("user.dir")+"\\resources\\";
 
 	public Shogi(){
  	try{
