@@ -8,45 +8,37 @@
  */
 import java.io.*;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.*; 
 import java.awt.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage; 
-import java.awt.Panel; 
+import java.awt.Panel;
+
 public class Shogi extends JFrame {
-	
+
 	int width=9,height=9;
-	
+
+	public static String ResourcesDir = System.getProperty("user.dir")+"\\Shogi\\resources\\";
+
 	public Shogi(){
  	try{
         
-        BufferedImage myImage = ImageIO.read(new File("C:\\Users\\Nefeli\\Documents\\JCreator LE\\MyProjects\\Shogi\\resources\\woodenbackground.png"));
+        BufferedImage myImage = ImageIO.read(new File(Shogi.ResourcesDir + "woodenbackground.png"));
 			setContentPane(new ImagePanel(myImage));
         } catch (IOException e){
         	e.printStackTrace();
         }
-	getContentPane().setLayout(new GridLayout(width,height));
-		
+		getContentPane().setLayout(new GridLayout(width,height));
+
 		for (int y=0; y<height; y++){
 			for (int x=0; x<width; x++){
 				String name = Piece.placement[x][y];
 				Piece button = new Piece(name);
 				button.position = new int[]{x,height-1-y};
 				
-				File f = new File("C:\\Users\\Nefeli\\Documents\\IB\\COMPUTER SCIENCE\\IA program\\Shogi\\resources\\" + name + "\\moves.txt");
-				try{
-					BufferedReader in = new BufferedReader(new FileReader(f));
-					try{
-						String line;
-						while (( line = in.readLine()) != null) {
-           					//System.out.print(line);
-           					String[] m = line.split(":");
-           					
-           					button.moves.put(Integer.parseInt(m[0]),Integer.parseInt(m[1])); 	 
-        				}
-					} catch (IOException e){}
-				} catch (FileNotFoundException e){}
+				Piece.Board.put((float) button.position[0] + (float) button.position[1]/10, button);
 					
 				getContentPane().add(button);		
 			}
@@ -54,8 +46,6 @@ public class Shogi extends JFrame {
 	}
 	
 	static void buildBoard(){
-
-	//	public Map <Integer, Piece> initialise = new HashMap<Integer,Piece>(); 
 
 		Shogi board = new Shogi();
 	
