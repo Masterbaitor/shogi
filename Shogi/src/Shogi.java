@@ -36,7 +36,7 @@ public class Shogi extends JFrame {
 			for (int x=0; x<width; x++){
 				String name = Piece.placement[x][y];
 				Piece button = new Piece(name);
-				button.position = new int[]{x,height-1-y};
+				button.setPosition(x, height-1-y);
 				
 				Piece.Board.put((float) button.position[0] + (float) button.position[1]/10, button);
 					

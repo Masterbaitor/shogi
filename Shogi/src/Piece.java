@@ -2,12 +2,14 @@
 import java.io.*;		//imports libraries
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 import java.net.URL;
 
 import javax.swing.border.Border;
+import java.awt.geom.AffineTransform;
 
 public class Piece extends JButton {
 	
@@ -18,7 +20,7 @@ public class Piece extends JButton {
 	public ImageIcon picture;
 	public Map <Integer,Integer> moves = new HashMap <Integer,Integer>();
 	public int[] position;
-	public boolean highlighted = false;
+	public boolean highlighted;
 
 	public Piece(String n){
 		super();
@@ -31,19 +33,49 @@ public class Piece extends JButton {
 		imageF = new ImageIcon(newimg);	
 		setIcon(imageF);
 		picture = imageF;
-	
-
-		Border black = BorderFactory.createLineBorder(Color.BLACK);
-   	 	setBorder(black);
-  		
+		setHighlighted(false);
 		setOpaque(false);
 		setContentAreaFilled(false);	
-			
+
 		addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent e){
 				onClicked();
            	}
-     	});
+		 });
+	}
+
+	public void setPosition(int x, int y){
+		position = new int[]{x, y};
+		if(name != null){
+			int p = position[1] < 4 ? 1 : 2;
+			assignToPlayer(p);
+		}
+	}
+
+	private void assignToPlayer(int player){
+		if(player == 2){
+
+			picture = flipImage(picture);
+			setIcon(picture);
+		}
+	}
+
+	private ImageIcon flipImage(ImageIcon img){
+
+			int w = img.getIconWidth();
+			int h = img.getIconHeight();
+			int type = BufferedImage.TYPE_4BYTE_ABGR_PRE;
+			BufferedImage image = new BufferedImage(w, h, type);
+			Graphics2D g2 = image.createGraphics();
+			double x = (h - w)/2.0;
+			double y = (w - h)/2.0;
+			AffineTransform at = AffineTransform.getTranslateInstance(x, y);
+			at.rotate(Math.toRadians(180), (w+y)/2.0, (h+x)/2.0);
+			g2.drawImage(picture.getImage(), at, null);
+			g2.dispose();
+			picture = new ImageIcon(image);
+	 
+			return picture;
 	}
 
 	private void onClicked(){
