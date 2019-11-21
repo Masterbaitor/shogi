@@ -134,7 +134,7 @@ public class Piece extends JButton {
 						direction[0] = -1;
 						direction[1] = 0;
 					break;
-					case 5: 
+					case 5:
 					break;
 					case 6: 
 						direction[0] = 1;
@@ -160,7 +160,7 @@ public class Piece extends JButton {
 		
 		for (int[] position : positionsToHighlight) {
 
-			Piece p = Piece.Board.get((float) position[0] + (float) position[1]/10);
+			Piece p = Piece.Board.get( (float) position[0] + (float) position[1]/10 );
 			HighlightedPieces.add(p);
 			p.setHighlighted(true);
 		}

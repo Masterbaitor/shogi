@@ -9,7 +9,6 @@
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.swing.*; 
 import java.awt.*;
 import javax.imageio.ImageIO;
@@ -77,6 +76,7 @@ public class Shogi extends JFrame {
 		}			
 	}	
 	
+
 	public static void main(String[]args){
 		buildPlacement();
 		buildBoard();
