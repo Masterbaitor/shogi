@@ -25,7 +25,7 @@ public class Piece extends JButton {
 	public Piece(String n){
 		super();
 		name = n;
-		loadMoves();		
+		//loadMoves();		
 
 		ImageIcon imageF = new ImageIcon(Shogi.ResourcesDir + n + "\\image.png" );
 		Image img = imageF.getImage() ;  
@@ -36,6 +36,7 @@ public class Piece extends JButton {
 		setHighlighted(false);
 		setOpaque(false);
 		setContentAreaFilled(false);	
+
 
 		addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent e){
@@ -53,11 +54,18 @@ public class Piece extends JButton {
 	}
 
 	private void assignToPlayer(int player){
+		
 		if(player == 2){
 
+			flipMoves();
 			picture = flipImage(picture);
 			setIcon(picture);
+			
 		}
+		else{
+			loadMoves();
+		}
+		
 	}
 
 	private ImageIcon flipImage(ImageIcon img){
@@ -110,15 +118,46 @@ public class Piece extends JButton {
 			} catch (IOException e){}
 		} catch (FileNotFoundException e){}
 	}
+
+	private void flipMoves(){
+		
+	//	Piece.loadMoves(this.moves<Integer,Integer>(Int));
+
+		File fxx = new File(Shogi.ResourcesDir + name + "\\moves.txt");
+		try{
+			BufferedReader in = new BufferedReader(new FileReader(fxx));
+			try{
+				String linexx;
+				while (( linexx = in.readLine()) != null) {
+					   String[] mxx = linexx.split(":");
+					   moves.put(Integer.parseInt(mxx[0]),Integer.parseInt(mxx[1]));
+					/*   if (Integer.mxx[0]<=3){
+							Integer = Integer +6;
+					   }
+					   else{
+						   if (Integer.mxx[0]>=7){
+							   Integer = Integer -6;
+						   }
+						   else {
+							   Integer = Integer; 
+						   }
+					   }*/
+					   
+				}
+			} catch (IOException e){}
+		} catch (FileNotFoundException e){}
+	}
 	
 	void highlight(){
 		
 		List<int[]> positionsToHighlight = new ArrayList<>();
+		
+
 		int[] direction = new int[2];
 		
 		for (Map.Entry<Integer,Integer> entry : moves.entrySet()) {
    		 	switch (entry.getKey()){
-					case 1: 
+					case 1:
 						direction[0] = -1;
 						direction[1] = -1;
 					break;
@@ -134,7 +173,13 @@ public class Piece extends JButton {
 						direction[0] = -1;
 						direction[1] = 0;
 					break;
-					case 5:
+					case 51:
+						direction[0] = -1;
+						direction[1] = 2;
+					break;
+					case 52: 
+						direction[0] = 1;
+						direction[1] = 2;
 					break;
 					case 6: 
 						direction[0] = 1;
@@ -153,6 +198,7 @@ public class Piece extends JButton {
 						direction[1] = 1;
 					break;
 				}
+				
 				positionsToHighlight.addAll(getPossiblePositions(direction, entry.getValue()));
 		}
 
@@ -160,7 +206,7 @@ public class Piece extends JButton {
 		
 		for (int[] position : positionsToHighlight) {
 
-			Piece p = Piece.Board.get( (float) position[0] + (float) position[1]/10 );
+			Piece p = Piece.Board.get((float) position[0] + (float) position[1]/10);
 			HighlightedPieces.add(p);
 			p.setHighlighted(true);
 		}
@@ -177,7 +223,7 @@ public class Piece extends JButton {
 	private void setHighlighted(boolean h){
 		highlighted = h;
 		if(highlighted){
-			this.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+			this.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
 		}
 		else{
 			this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
