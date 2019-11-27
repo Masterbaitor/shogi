@@ -21,12 +21,12 @@ public class Piece extends JButton {
 	public Map <Integer,Integer> moves = new HashMap <Integer,Integer>();
 	public int[] position;
 	public boolean highlighted;
+	public int player;
 
 	public Piece(String n){
 		super();
 		name = n;
-		//loadMoves();		
-
+	
 		ImageIcon imageF = new ImageIcon(Shogi.ResourcesDir + n + "\\image.png" );
 		Image img = imageF.getImage() ;  
 		Image newimg = img.getScaledInstance(70, 80, java.awt.Image.SCALE_SMOOTH) ;  
@@ -57,15 +57,12 @@ public class Piece extends JButton {
 		
 		if(player == 2){
 
-			flipMoves();
 			picture = flipImage(picture);
 			setIcon(picture);
 			
 		}
-		else{
-			loadMoves();
-		}
-		
+		this.player = player;
+		loadMoves();
 	}
 
 	private ImageIcon flipImage(ImageIcon img){
@@ -112,37 +109,11 @@ public class Piece extends JButton {
 			try{
 				String line;
 				while (( line = in.readLine()) != null) {
-					   String[] m = line.split(":");
-					   moves.put(Integer.parseInt(m[0]),Integer.parseInt(m[1])); 	 
-				}
-			} catch (IOException e){}
-		} catch (FileNotFoundException e){}
-	}
-
-	private void flipMoves(){
-		
-	//	Piece.loadMoves(this.moves<Integer,Integer>(Int));
-
-		File fxx = new File(Shogi.ResourcesDir + name + "\\moves.txt");
-		try{
-			BufferedReader in = new BufferedReader(new FileReader(fxx));
-			try{
-				String linexx;
-				while (( linexx = in.readLine()) != null) {
-					   String[] mxx = linexx.split(":");
-					   moves.put(Integer.parseInt(mxx[0]),Integer.parseInt(mxx[1]));
-					/*   if (Integer.mxx[0]<=3){
-							Integer = Integer +6;
-					   }
-					   else{
-						   if (Integer.mxx[0]>=7){
-							   Integer = Integer -6;
-						   }
-						   else {
-							   Integer = Integer; 
-						   }
-					   }*/
-					   
+					String[] m = line.split(":");
+					if(player == 2 && Integer.parseInt(m[0]) < 10){
+						m[0] = Integer.toString(10 - Integer.parseInt(m[0]));
+					}
+					moves.put(Integer.parseInt(m[0]),Integer.parseInt(m[1]));
 				}
 			} catch (IOException e){}
 		} catch (FileNotFoundException e){}
@@ -174,12 +145,12 @@ public class Piece extends JButton {
 						direction[1] = 0;
 					break;
 					case 51:
-						direction[0] = -1;
-						direction[1] = 2;
-					break;
-					case 52: 
 						direction[0] = 1;
-						direction[1] = 2;
+						direction[1] = player == 2 ? -2 : 2;
+					break;
+					case 52:
+						direction[0] = -1;
+						direction[1] = player == 2 ? -2 : 2;
 					break;
 					case 6: 
 						direction[0] = 1;
@@ -233,8 +204,7 @@ public class Piece extends JButton {
 	private List<int[]> getPossiblePositions(int[] direction, int nspaces) {
 		
 		List<int[]> possiblePos = new ArrayList<>();
-		int[] xyPosition;
-		
+		int[] xyPosition;		
 		int[] currentPos = position;
 
 		for (int counter = 1; counter < nspaces+1; counter++) {
