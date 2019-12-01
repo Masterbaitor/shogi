@@ -21,7 +21,7 @@ public class Piece extends JButton {
 	public Map <Integer,Integer> moves = new HashMap <Integer,Integer>();
 	public int[] position;
 	public boolean highlighted;
-	public int player;
+	public Player player;
 
 	public Piece(String n){
 		super();
@@ -49,11 +49,11 @@ public class Piece extends JButton {
 		position = new int[]{x, y};
 		if(name != null){
 			int p = position[1] < 4 ? 1 : 2;
-			assignToPlayer(p);
+			//assignToPlayer(p);
 		}
 	}
 
-	private void assignToPlayer(int player){
+/*	private void assignToPlayer(int player){
 		
 		if(player == 2){
 
@@ -64,7 +64,7 @@ public class Piece extends JButton {
 		this.player = player;
 		loadMoves();
 	}
-
+*/
 	private ImageIcon flipImage(ImageIcon img){
 
 			int w = img.getIconWidth();
@@ -78,9 +78,11 @@ public class Piece extends JButton {
 			at.rotate(Math.toRadians(180), (w+y)/2.0, (h+x)/2.0);
 			g2.drawImage(picture.getImage(), at, null);
 			g2.dispose();
-			picture = new ImageIcon(image);
 	 
-			return picture;
+			return new ImageIcon(image);
+	}
+	public void flip(){
+		picture = flipImage(picture);
 	}
 
 	private void onClicked(){
