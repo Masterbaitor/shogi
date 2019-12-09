@@ -39,10 +39,12 @@ public class Shogi extends JFrame {
 					String name = Piece.placement[x][y];
 					Piece button = new Piece(name);
 					button.setPosition(x, height-1-y);
-					if(y<5){
-						player1.addPiece(button);
-					}else{
-						player2.addPiece(button);
+					if(button.name != null){
+						if(y>5){
+							player1.addPiece(button);
+						}else{
+							player2.addPiece(button);
+							}
 					}
 					Piece.Board.put((float) button.position[0] + (float) button.position[1]/10, button);	
 					getContentPane().add(button);		
@@ -86,7 +88,6 @@ public class Shogi extends JFrame {
 	public static void main(String[]args){
 		buildPlacement();
 		buildBoard();
-			
 	}
 	
 }

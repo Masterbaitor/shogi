@@ -133,11 +133,11 @@ public class Piece extends JButton {
 					break;
 					case 51:
 						direction[0] = 1;
-						direction[1] = player == 2 ? -2 : 2;
+						direction[1] = player.isMainPlayer ? 2 : -2;
 					break;
 					case 52:
 						direction[0] = -1;
-						direction[1] = player == 2 ? -2 : 2;
+						direction[1] = player.isMainPlayer ? 2 : -2;
 					break;
 					case 6: 
 						direction[0] = 1;
