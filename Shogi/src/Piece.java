@@ -68,11 +68,13 @@ public class Piece extends JButton {
 
 	public void flip(){
 		picture = flipImage(picture);
+		setIcon(picture);
 	}
 
 	private void onClicked(){
 		if(HighlightedPieces.contains(this)){
 			this.name = SelectedPiece.name;
+			this.player = SelectedPiece.player;
 			this.moves = SelectedPiece.moves;
 			this.picture = SelectedPiece.picture;
 			this.setIcon(this.picture);
