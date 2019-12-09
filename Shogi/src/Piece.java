@@ -47,24 +47,8 @@ public class Piece extends JButton {
 
 	public void setPosition(int x, int y){
 		position = new int[]{x, y};
-		if(name != null){
-			int p = position[1] < 4 ? 1 : 2;
-			//assignToPlayer(p);
-		}
 	}
 
-/*	private void assignToPlayer(int player){
-		
-		if(player == 2){
-
-			picture = flipImage(picture);
-			setIcon(picture);
-			
-		}
-		this.player = player;
-		loadMoves();
-	}
-*/
 	private ImageIcon flipImage(ImageIcon img){
 
 			int w = img.getIconWidth();
@@ -81,6 +65,7 @@ public class Piece extends JButton {
 	 
 			return new ImageIcon(image);
 	}
+
 	public void flip(){
 		picture = flipImage(picture);
 	}
@@ -103,7 +88,7 @@ public class Piece extends JButton {
 		}
 	}
 
-	private void loadMoves(){
+	public void loadMoves(){
 
 		File f = new File(Shogi.ResourcesDir + name + "\\moves.txt");
 		try{
@@ -112,7 +97,7 @@ public class Piece extends JButton {
 				String line;
 				while (( line = in.readLine()) != null) {
 					String[] m = line.split(":");
-					if(player == 2 && Integer.parseInt(m[0]) < 10){
+					if(!player.isMainPlayer && Integer.parseInt(m[0]) < 10){
 						m[0] = Integer.toString(10 - Integer.parseInt(m[0]));
 					}
 					moves.put(Integer.parseInt(m[0]),Integer.parseInt(m[1]));

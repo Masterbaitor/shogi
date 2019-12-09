@@ -22,26 +22,32 @@ public class Shogi extends JFrame {
 	public static String ResourcesDir = System.getProperty("user.dir")+"\\resources\\";
 
 	public Shogi(){
- 	try{
-        
-        BufferedImage myImage = ImageIO.read(new File(Shogi.ResourcesDir + "woodenbackground.png"));
-			setContentPane(new ImagePanel(myImage));
-        } catch (IOException e){
-        	e.printStackTrace();
-        }
-		getContentPane().setLayout(new GridLayout(width,height));
-
-		for (int y=0; y<height; y++){
-			for (int x=0; x<width; x++){
-				String name = Piece.placement[x][y];
-				Piece button = new Piece(name);
-				button.setPosition(x, height-1-y);
-				
-				Piece.Board.put((float) button.position[0] + (float) button.position[1]/10, button);
-					
-				getContentPane().add(button);		
+		
+		Player player1 = new Player(true);
+		Player player2 = new Player(false);
+		try{
+			
+			BufferedImage myImage = ImageIO.read(new File(Shogi.ResourcesDir + "woodenbackground.png"));
+				setContentPane(new ImagePanel(myImage));
+			} catch (IOException e){
+				e.printStackTrace();
 			}
-		}
+			getContentPane().setLayout(new GridLayout(width,height));
+
+			for (int y=0; y<height; y++){
+				for (int x=0; x<width; x++){
+					String name = Piece.placement[x][y];
+					Piece button = new Piece(name);
+					button.setPosition(x, height-1-y);
+					if(y<5){
+						player1.addPiece(button);
+					}else{
+						player2.addPiece(button);
+					}
+					Piece.Board.put((float) button.position[0] + (float) button.position[1]/10, button);	
+					getContentPane().add(button);		
+				}
+			}
 	}
 	
 	static void buildBoard(){

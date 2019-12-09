@@ -5,17 +5,29 @@ public class Player{
     LinkedList<Piece> pieces = new LinkedList<>();
     boolean isMainPlayer;
 
-    private void addPiece(Piece p){
+    public Player(boolean main){
+
+        isMainPlayer=main;
+
+    }
+
+    public void addPiece(Piece p){
         
         pieces.add(p);
         if (!isMainPlayer || p.player != this){
             p.flip();
         }
-        
 		p.player = this;
-        
-        loadMoves();
-	}
+        p.loadMoves();
+    }
+    
+    private void removePiece(Piece p){
+
+    }
+
+    void capture(){
+   
+    }
 
 
 }
