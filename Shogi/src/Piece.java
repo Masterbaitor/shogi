@@ -71,17 +71,22 @@ public class Piece extends JButton {
 		setIcon(picture);
 	}
 
+	private static void switchPieces(Piece pieceA, Piece pieceB){
+		pieceA.name = pieceB.name;
+		pieceA.player = pieceB.player;
+		pieceA.moves = pieceB.moves;
+		pieceA.picture = pieceB.picture;
+		pieceA.setIcon(pieceA.picture);
+		pieceB.name = null;
+		pieceB.moves = null;
+		pieceB.picture = null;
+		pieceB.player = null;
+		pieceB.setIcon(pieceB.picture);
+	}
+
 	private void onClicked(){
 		if(HighlightedPieces.contains(this)){
-			this.name = SelectedPiece.name;
-			this.player = SelectedPiece.player;
-			this.moves = SelectedPiece.moves;
-			this.picture = SelectedPiece.picture;
-			this.setIcon(this.picture);
-			SelectedPiece.name = null;
-			SelectedPiece.moves = null;
-			SelectedPiece.picture = null;
-			SelectedPiece.setIcon(SelectedPiece.picture);
+			switchPieces(this, SelectedPiece);
 			clearHighlights();
 		}
 		else{
@@ -111,7 +116,6 @@ public class Piece extends JButton {
 	void highlight(){
 		
 		List<int[]> positionsToHighlight = new ArrayList<>();
-		
 
 		int[] direction = new int[2];
 		
@@ -200,10 +204,14 @@ public class Piece extends JButton {
 			xyPosition = new int[2];
 			xyPosition[0] = counter*direction[0] + currentPos[0];
 			xyPosition[1] = counter*direction[1] + currentPos[1];
-			if((xyPosition[0]<0 || xyPosition[0]>8) || (xyPosition[1]<0 || xyPosition[1]>8)){
-				continue;
+			Piece pieceAtPosition = Board.get((float) xyPosition[0] + (float) xyPosition[1]/10);
+			if((xyPosition[0]<0 || xyPosition[0]>8) || (xyPosition[1]<0 || xyPosition[1]>8) || pieceAtPosition.player == player){
+				break;
 			}
 			possiblePos.add(xyPosition);
+			if(pieceAtPosition.name != null){
+				break;
+			}
 		}
 		return possiblePos;
 	}
