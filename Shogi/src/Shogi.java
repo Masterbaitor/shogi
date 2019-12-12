@@ -21,13 +21,13 @@ public class Shogi extends JFrame {
 
 	public static String ResourcesDir = System.getProperty("user.dir")+"\\resources\\";
 
-	public Player Player1;
-	public Player Player2;
+	static public Player Player1;
+	static public Player Player2;
 
 	public Shogi(){
-		
 		Player1 = new Player(true);
 		Player2 = new Player(false);
+		Player.ActivePlayer = Player1;
 		loadBackground(Shogi.ResourcesDir + "woodenbackground.png");
 		getContentPane().setLayout(new GridLayout(width,height));
 		placePieces();	

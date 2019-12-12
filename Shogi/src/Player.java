@@ -4,6 +4,7 @@ public class Player{
     
     LinkedList<Piece> pieces = new LinkedList<>();
     boolean isMainPlayer;
+    public static Player ActivePlayer;
 
     public Player(boolean main){
 

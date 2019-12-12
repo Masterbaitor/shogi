@@ -85,13 +85,17 @@ public class Piece extends JButton {
 	}
 
 	private void onClicked(){
-		if(HighlightedPieces.contains(this)){
-			switchPieces(this, SelectedPiece);
-			clearHighlights();
-		}
-		else{
-			SelectedPiece = this;
-			highlight();
+		boolean isHighlighted = HighlightedPieces.contains(this);
+		if(player == Player.ActivePlayer || isHighlighted){
+			if(isHighlighted){
+				switchPieces(this, SelectedPiece);
+				clearHighlights();
+				Player.ActivePlayer = Player.ActivePlayer == Shogi.Player2 ? Shogi.Player1 : Shogi.Player2; 
+			}
+			else{
+				SelectedPiece = this;
+				highlight();
+			}
 		}
 	}
 
