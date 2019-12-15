@@ -89,6 +89,7 @@ public class Piece extends JButton {
 		if(player == Player.ActivePlayer || isHighlighted){
 			if(isHighlighted){
 				switchPieces(this, SelectedPiece);
+				promote();
 				clearHighlights();
 				Player.ActivePlayer = Player.ActivePlayer == Shogi.Player2 ? Shogi.Player1 : Shogi.Player2; 
 			}
@@ -120,54 +121,9 @@ public class Piece extends JButton {
 	void highlight(){
 		
 		List<int[]> positionsToHighlight = new ArrayList<>();
-
-		int[] direction = new int[2];
 		
 		for (Map.Entry<Integer,Integer> entry : moves.entrySet()) {
-   		 	switch (entry.getKey()){
-					case 1:
-						direction[0] = -1;
-						direction[1] = -1;
-					break;
-					case 2:	
-						direction[0] = 0;
-						direction[1] = -1;
-					break; 
-					case 3:	
-						direction[0] = 1;
-						direction[1] = -1;
-					break;
-					case 4: 
-						direction[0] = -1;
-						direction[1] = 0;
-					break;
-					case 51:
-						direction[0] = 1;
-						direction[1] = player.isMainPlayer ? 2 : -2;
-					break;
-					case 52:
-						direction[0] = -1;
-						direction[1] = player.isMainPlayer ? 2 : -2;
-					break;
-					case 6: 
-						direction[0] = 1;
-						direction[1] = 0;
-					break;
-					case 7: 
-						direction[0] = -1;
-						direction[1] = 1;
-					break;
-					case 8: 
-						direction[0] = 0;
-						direction[1] = 1;
-					break;
-					case 9: 
-						direction[0] = 1;
-						direction[1] = 1;
-					break;
-				}
-				
-				positionsToHighlight.addAll(getPossiblePositions(direction, entry.getValue()));
+				positionsToHighlight.addAll(getPossiblePositions(convertDirection(entry.getKey()), entry.getValue()));
 		}
 
 		clearHighlights();
@@ -218,6 +174,78 @@ public class Piece extends JButton {
 			}
 		}
 		return possiblePos;
+	}
+
+	public int[] convertDirections(int i){
+		switch (i){
+			case 1:
+				direction[0] = -1;
+				direction[1] = -1;
+			break;
+			case 2:	
+				direction[0] = 0;
+				direction[1] = -1;
+			break; 
+			case 3:	
+				direction[0] = 1;
+				direction[1] = -1;
+			break;
+			case 4: 
+				direction[0] = -1;
+				direction[1] = 0;
+			break;
+			case 51:
+				direction[0] = 1;
+				direction[1] = player.isMainPlayer ? 2 : -2;
+			break;
+			case 52:
+				direction[0] = -1;
+				direction[1] = player.isMainPlayer ? 2 : -2;
+			break;
+			case 6: 
+				direction[0] = 1;
+				direction[1] = 0;
+			break;
+			case 7: 
+				direction[0] = -1;
+				direction[1] = 1;
+			break;
+			case 8: 
+				direction[0] = 0;
+				direction[1] = 1;
+			break;
+			case 9: 
+				direction[0] = 1;
+				direction[1] = 1;
+			break;
+		}
+		return direction;
+	}
+
+	public boolean hasPossiblePositions(){
+
+		List<int[]> store;
+
+		for (Map.Entry<Integer,Integer> entry : moves.entrySet()) {
+			store = getPossiblePositions(convertDirection(entry.getKey()), entry.getValue());
+			if (!store.isEmpty()){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void promote(){
+		
+		if(!hasPossiblePositions()){
+			System.out.print("must promote");
+		}
+		else if((position[1]>5) && player == Shogi.Player1 || (position[1]<3) && player == Shogi.Player2){
+			
+			System.out.print("promotion");
+			System.out.print(name);
+		}
+
 	}
 	
 	static String[][] placement = new String[9][9];
