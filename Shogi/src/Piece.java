@@ -176,7 +176,8 @@ public class Piece extends JButton {
 		return possiblePos;
 	}
 
-	public int[] convertDirections(int i){
+	public int[] convertDirection(int i){
+		int[] direction = new int[2];
 		switch (i){
 			case 1:
 				direction[0] = -1;
