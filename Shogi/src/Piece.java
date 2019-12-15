@@ -13,9 +13,13 @@ import java.awt.geom.AffineTransform;
 
 public class Piece extends JButton {
 	
+	public static String[][] Placement;
 	public static Map<Float, Piece> Board = new HashMap <Float, Piece>();
 	public static List<Piece> HighlightedPieces = new ArrayList<Piece>();
 	public static Piece SelectedPiece;
+
+	public String folder;
+	public boolean isPromoted;
 	public String name;
 	public ImageIcon picture;
 	public Map <Integer,Integer> moves = new HashMap <Integer,Integer>();
@@ -23,11 +27,12 @@ public class Piece extends JButton {
 	public boolean highlighted;
 	public Player player;
 
-	public Piece(String n){
+	public Piece(String n, boolean promoted){
 		super();
-		name = n;
-	
-		ImageIcon imageF = new ImageIcon(Shogi.ResourcesDir + n + "\\image.png" );
+		folder = Shogi.ResourcesDir + n;
+		isPromoted = promoted;
+		name = isPromoted? "Promoted"+n : n;
+		ImageIcon imageF = new ImageIcon(folder + (isPromoted ? "\\image_promoted.png" : "\\image.png"));
 		Image img = imageF.getImage() ;  
 		Image newimg = img.getScaledInstance(70, 80, java.awt.Image.SCALE_SMOOTH) ;  
 		imageF = new ImageIcon(newimg);	
@@ -36,7 +41,6 @@ public class Piece extends JButton {
 		setHighlighted(false);
 		setOpaque(false);
 		setContentAreaFilled(false);	
-
 
 		addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent e){
@@ -102,7 +106,7 @@ public class Piece extends JButton {
 
 	public void loadMoves(){
 
-		File f = new File(Shogi.ResourcesDir + name + "\\moves.txt");
+		File f = new File(Shogi.ResourcesDir + name + (isPromoted? "\\moves_promoted.txt" : "\\moves.txt"));
 		try{
 			BufferedReader in = new BufferedReader(new FileReader(f));
 			try{
@@ -240,16 +244,13 @@ public class Piece extends JButton {
 		
 		if(!hasPossiblePositions()){
 			System.out.print("must promote");
+			Piece promotedPiece = new Piece(name, true);
+			switchPieces(this, promotedPiece);
 		}
 		else if((position[1]>5) && player == Shogi.Player1 || (position[1]<3) && player == Shogi.Player2){
-			
 			System.out.print("promotion");
 			System.out.print(name);
 		}
-
-	}
-	
-	static String[][] placement = new String[9][9];
-		
+	}	
 }
 	
