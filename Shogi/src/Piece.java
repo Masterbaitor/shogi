@@ -32,7 +32,7 @@ public class Piece extends JButton {
 		folder = Shogi.ResourcesDir + n;
 		isPromoted = promoted;
 		name = isPromoted? "Promoted"+n : n;
-		ImageIcon imageF = new ImageIcon(folder + (isPromoted ? "\\image_promoted.png" : "\\image.png"));
+		ImageIcon imageF = new ImageIcon(folder + (isPromoted ? "\\imagePromoted.png" : "\\image.png"));
 		Image img = imageF.getImage() ;  
 		Image newimg = img.getScaledInstance(70, 80, java.awt.Image.SCALE_SMOOTH) ;  
 		imageF = new ImageIcon(newimg);	
@@ -106,7 +106,7 @@ public class Piece extends JButton {
 
 	public void loadMoves(){
 
-		File f = new File(Shogi.ResourcesDir + name + (isPromoted? "\\moves_promoted.txt" : "\\moves.txt"));
+		File f = new File(Shogi.ResourcesDir + name + (isPromoted? "\\movesPromoted.txt" : "\\moves.txt"));
 		try{
 			BufferedReader in = new BufferedReader(new FileReader(f));
 			try{
@@ -245,6 +245,7 @@ public class Piece extends JButton {
 		if(!hasPossiblePositions()){
 			System.out.print("must promote");
 			Piece promotedPiece = new Piece(name, true);
+			player.addPiece(promotedPiece);
 			switchPieces(this, promotedPiece);
 		}
 		else if((position[1]>5) && player == Shogi.Player1 || (position[1]<3) && player == Shogi.Player2){
