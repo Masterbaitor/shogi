@@ -13,7 +13,7 @@ import java.awt.geom.AffineTransform;
 
 public class Piece extends JButton {
 	
-	public static String[][] Placement;
+	public static String[][] placement;
 	public static Map<Float, Piece> Board = new HashMap <Float, Piece>();
 	public static List<Piece> HighlightedPieces = new ArrayList<Piece>();
 	public static Piece SelectedPiece;
@@ -31,9 +31,9 @@ public class Piece extends JButton {
 		super();
 		folder = Shogi.ResourcesDir + n;
 		isPromoted = promoted;
-		name = isPromoted? "Promoted"+n : n;
+		name = isPromoted? "Promoted"+ n : n;
 		ImageIcon imageF = new ImageIcon(folder + (isPromoted ? "\\imagePromoted.png" : "\\image.png"));
-		Image img = imageF.getImage() ;  
+		Image img = imageF.getImage();  
 		Image newimg = img.getScaledInstance(70, 80, java.awt.Image.SCALE_SMOOTH) ;  
 		imageF = new ImageIcon(newimg);	
 		setIcon(imageF);
@@ -106,7 +106,7 @@ public class Piece extends JButton {
 
 	public void loadMoves(){
 
-		File f = new File(Shogi.ResourcesDir + name + (isPromoted? "\\movesPromoted.txt" : "\\moves.txt"));
+		File f = new File(folder + (isPromoted? "\\movesPromoted.txt" : "\\moves.txt"));
 		try{
 			BufferedReader in = new BufferedReader(new FileReader(f));
 			try{
@@ -242,16 +242,14 @@ public class Piece extends JButton {
 
 	public void promote(){
 		
-		if(!hasPossiblePositions()){
-			System.out.print("must promote");
-			Piece promotedPiece = new Piece(name, true);
-			player.addPiece(promotedPiece);
-			switchPieces(this, promotedPiece);
-		}
-		else if((position[1]>5) && player == Shogi.Player1 || (position[1]<3) && player == Shogi.Player2){
-			System.out.print("promotion");
+		if((position[1]>5) && player == Shogi.Player1 || (position[1]<3) && player == Shogi.Player2){
+			if(!hasPossiblePositions()){
+				Piece promotedPiece = new Piece(name, true);
+				player.addPiece(promotedPiece);
+				switchPieces(this, promotedPiece);System.out.print("promotion");
 			System.out.print(name);
+			}
 		}
-	}	
+	}
 }
 	

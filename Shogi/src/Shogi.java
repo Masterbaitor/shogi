@@ -34,8 +34,7 @@ public class Shogi extends JFrame {
 	}
 
 	private void loadBackground(String filepath){
-		try{
-			
+		try{		
 			BufferedImage myImage = ImageIO.read(new File(filepath));
 				setContentPane(new ImagePanel(myImage));
 		} catch (IOException e){
@@ -47,14 +46,14 @@ public class Shogi extends JFrame {
 		for (int y=0; y<height; y++){
 			for (int x=0; x<width; x++){
 				String name = Piece.placement[x][y];
-				Piece button = new Piece(name);
+				Piece button = new Piece(name, false);
 				button.setPosition(x, height-1-y);
 				if(button.name != null){
 					if(y>5){
 						Player1.addPiece(button);
 					}else{
 						Player2.addPiece(button);
-						}
+					}
 				}
 				Piece.Board.put((float) button.position[0] + (float) button.position[1]/10, button);	
 				getContentPane().add(button);
@@ -96,6 +95,7 @@ public class Shogi extends JFrame {
 	
 
 	public static void main(String[]args){
+		Piece.placement = new String[9][9];
 		buildPlacement();
 		buildBoard();
 	}
