@@ -246,8 +246,15 @@ public class Piece extends JButton {
 			if(!hasPossiblePositions()){
 				Piece promotedPiece = new Piece(name, true);
 				player.addPiece(promotedPiece);
-				switchPieces(this, promotedPiece);System.out.print("promotion");
-			System.out.print(name);
+				switchPieces(this, promotedPiece);	
+			}
+			else{				
+				int a = JOptionPane.showConfirmDialog(Shogi.board, "Do you want to promote this piece?", "", JOptionPane.YES_NO_OPTION);
+				if (a==JOptionPane.YES_OPTION){
+					Piece promotedPiece = new Piece(name, true);
+					player.addPiece(promotedPiece);
+					switchPieces(this, promotedPiece);	
+				}
 			}
 		}
 	}

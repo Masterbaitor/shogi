@@ -24,6 +24,8 @@ public class Shogi extends JFrame {
 	static public Player Player1;
 	static public Player Player2;
 
+	static public Shogi board;
+
 	public Shogi(){
 		Player1 = new Player(true);
 		Player2 = new Player(false);
@@ -60,11 +62,10 @@ public class Shogi extends JFrame {
 			}
 		}
 	}
-	
-	static void buildBoard(){
 
-		Shogi board = new Shogi();
-	
+	static void buildBoard(){
+		board = new Shogi();
+		
 		board.setSize(900,900); 
 		board.setLocationRelativeTo(null);
     	board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
