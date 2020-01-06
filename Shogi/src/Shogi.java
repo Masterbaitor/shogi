@@ -54,6 +54,7 @@ public class Shogi extends JFrame {
 					if(y>5){
 						Player1.addPiece(button);
 					}else{
+						button.flip();
 						Player2.addPiece(button);
 					}
 				}

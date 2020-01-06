@@ -14,9 +14,9 @@ public class Player{
     }
 
     public void addPiece(Piece p){
-        
+
         pieces.add(p);
-        if (!isMainPlayer || p.player != this && p.player != null){
+        if (p.player != this && p.player != null){
             p.flip();
         }
 		p.player = this;

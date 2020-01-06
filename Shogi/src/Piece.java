@@ -81,7 +81,7 @@ public class Piece extends JButton {
 		pieceA.moves = pieceB.moves;
 		pieceA.picture = pieceB.picture;
 		pieceA.setIcon(pieceA.picture);
-		pieceA.player.add(pieceA);
+		pieceA.player.addPiece(pieceA);
 		pieceB.player.pieces.remove(pieceB);
 		pieceB.name = null;
 		pieceB.moves = null;
