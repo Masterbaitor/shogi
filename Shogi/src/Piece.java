@@ -14,12 +14,14 @@ import java.awt.geom.AffineTransform;
 public class Piece extends JButton {
 	
 	public static String[][] placement;
+	public static String[][] CapturedPlacement;
 	public static Map<Float, Piece> Board = new HashMap <Float, Piece>();
 	public static List<Piece> HighlightedPieces = new ArrayList<Piece>();
 	public static Piece SelectedPiece;
 
 	public String folder;
 	public boolean isPromoted;
+	public boolean canPromote;
 	public String name;
 	public ImageIcon picture;
 	public Map <Integer,Integer> moves = new HashMap <Integer,Integer>();
@@ -78,24 +80,32 @@ public class Piece extends JButton {
 	public static void switchPieces(Piece pieceA, Piece pieceB){
 		pieceA.name = pieceB.name;
 		pieceA.player = pieceB.player;
+		pieceA.folder = pieceB.folder;
+		pieceA.canPromote = pieceB.canPromote;
+		pieceA.isPromoted = pieceB.isPromoted;
 		pieceA.moves = pieceB.moves;
 		pieceA.picture = pieceB.picture;
 		pieceA.setIcon(pieceA.picture);
-		pieceA.player.addPiece(pieceA);
-		pieceB.player.pieces.remove(pieceB);
 		pieceB.name = null;
 		pieceB.moves = null;
 		pieceB.picture = null;
 		pieceB.player = null;
+		pieceB.folder = null;
+		pieceB.canPromote = false;
+		pieceB.isPromoted = false;
 		pieceB.setIcon(pieceB.picture);
 	}
 
 	private void onClicked(){
 		boolean isHighlighted = HighlightedPieces.contains(this);
+		canPromote = isInPromotionZone();
 		if(player == Player.ActivePlayer || isHighlighted){
 			if(isHighlighted){
 				switchPieces(this, SelectedPiece);
-				promote();
+				canPromote = isInPromotionZone() || canPromote;
+				if(canPromote && !isPromoted && (!hasPossiblePositions() || (askForPromotion() == JOptionPane.YES_OPTION))){
+					promote();
+				}
 				clearHighlights();
 				Player.ActivePlayer = Player.ActivePlayer == Shogi.Player2 ? Shogi.Player1 : Shogi.Player2; 
 			}
@@ -244,21 +254,18 @@ public class Piece extends JButton {
 
 	public void promote(){
 		
-		if((position[1]>5) && player == Shogi.Player1 || (position[1]<3) && player == Shogi.Player2){
-			if(!hasPossiblePositions()){
-				Piece promotedPiece = new Piece(name, true);
-				player.addPiece(promotedPiece);
-				switchPieces(this, promotedPiece);	
-			}
-			else{				
-				int a = JOptionPane.showConfirmDialog(Shogi.board, "Do you want to promote this piece?", "", JOptionPane.YES_NO_OPTION);
-				if (a==JOptionPane.YES_OPTION){
-					Piece promotedPiece = new Piece(name, true);
-					player.addPiece(promotedPiece);
-					switchPieces(this, promotedPiece);	
-				}
-			}
-		}
+		Piece promotedPiece = new Piece(name, true);
+		player.addPiece(promotedPiece);
+		switchPieces(this, promotedPiece);
 	}
+
+	private boolean isInPromotionZone(){
+		return ((position[1]>5) && player == Shogi.Player1 || (position[1]<3) && player == Shogi.Player2);
+	}
+
+	private int askForPromotion(){
+		return JOptionPane.showConfirmDialog(Shogi.board, "Do you want to promote this piece?", "", JOptionPane.YES_NO_OPTION);
+	}
+
 }
 	

@@ -47,19 +47,15 @@ public class Shogi extends JFrame {
 	private void placePieces(){
 		for (int y=0; y<height; y++){
 			for (int x=0; x<width+3; x++){
+				Player player = y > 5 ? Player1 : Player2;
 				String name = Piece.placement[x][y];
 				Piece button = new Piece(name, false);
 				button.setPosition(x, height-1-y);
 				if(button.name != null){
-					if(y>5){
-						Player1.addPiece(button);
-					}else{
-						button.flip();
-						Player2.addPiece(button);
-					}
+					player.addPiece(button);
 				}
-				if (x>width){
-					
+				if (x>width-1){
+					player.CapturedZone.put(Piece.CapturedPlacement[x][y], button);
 				}
 				else{
 					Piece.Board.put((float) button.position[0] + (float) button.position[1]/10, button);	
@@ -98,12 +94,23 @@ public class Shogi extends JFrame {
 			Piece.placement[i][2] = "Pawn"; 
 			Piece.placement[i][6] = "Pawn";
 		}			
-	}	
-	
+	}
+
+	static void buildCapturedPlacement(){
+		Piece.CapturedPlacement[10][0] = "Gold";	Piece.CapturedPlacement[10][8] = "Gold";
+		Piece.CapturedPlacement[9][1] = "Lance";	Piece.CapturedPlacement[9][7] = "Lance";
+		Piece.CapturedPlacement[10][1] = "Silver";	Piece.CapturedPlacement[10][7] = "Silver";
+		Piece.CapturedPlacement[11][1] = "Knight";	Piece.CapturedPlacement[11][7] = "Knight";
+		Piece.CapturedPlacement[9][2] = "Bishop";	Piece.CapturedPlacement[9][6] = "Bishop";
+		Piece.CapturedPlacement[10][2] = "Pawn";	Piece.CapturedPlacement[10][6] = "Pawn";
+		Piece.CapturedPlacement[11][2] = "Rook";	Piece.CapturedPlacement[11][6] = "Rook";
+	}
 
 	public static void main(String[]args){
 		Piece.placement = new String[12][9];
+		Piece.CapturedPlacement = new String[12][9];
 		buildPlacement();
+		buildCapturedPlacement();
 		buildBoard();
 	}
 	
