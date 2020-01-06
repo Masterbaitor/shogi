@@ -23,12 +23,12 @@ public class Player{
         p.loadMoves();
     }
     
-    private void removePiece(Piece p){
-
-    }
-
-    void capture(){
+    void capture(Piece p){
    
+        Piece unpromotedPiece = new Piece(p.name, false);
+        Piece.switchPieces(p, unpromotedPiece);
+        p.player.pieces.remove(p);
+
     }
 
 

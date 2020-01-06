@@ -17,7 +17,7 @@ import java.awt.Panel;
 
 public class Shogi extends JFrame {
 
-	int width=9,height=9;
+	int width=9, height=9;
 
 	public static String ResourcesDir = System.getProperty("user.dir")+"\\resources\\";
 
@@ -46,7 +46,7 @@ public class Shogi extends JFrame {
 
 	private void placePieces(){
 		for (int y=0; y<height; y++){
-			for (int x=0; x<width; x++){
+			for (int x=0; x<width+3; x++){
 				String name = Piece.placement[x][y];
 				Piece button = new Piece(name, false);
 				button.setPosition(x, height-1-y);
@@ -57,7 +57,12 @@ public class Shogi extends JFrame {
 						Player2.addPiece(button);
 					}
 				}
-				Piece.Board.put((float) button.position[0] + (float) button.position[1]/10, button);	
+				if (x>width){
+					
+				}
+				else{
+					Piece.Board.put((float) button.position[0] + (float) button.position[1]/10, button);	
+				}
 				getContentPane().add(button);
 			}
 		}
@@ -66,7 +71,7 @@ public class Shogi extends JFrame {
 	static void buildBoard(){
 		board = new Shogi();
 		
-		board.setSize(900,900); 
+		board.setSize(1206,900); 
 		board.setLocationRelativeTo(null);
     	board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	board.setVisible(true);
@@ -96,7 +101,7 @@ public class Shogi extends JFrame {
 	
 
 	public static void main(String[]args){
-		Piece.placement = new String[9][9];
+		Piece.placement = new String[12][9];
 		buildPlacement();
 		buildBoard();
 	}

@@ -31,7 +31,7 @@ public class Piece extends JButton {
 		super();
 		folder = Shogi.ResourcesDir + n;
 		isPromoted = promoted;
-		name = isPromoted? "Promoted"+ n : n;
+		name = n;
 		ImageIcon imageF = new ImageIcon(folder + (isPromoted ? "\\imagePromoted.png" : "\\image.png"));
 		Image img = imageF.getImage();  
 		Image newimg = img.getScaledInstance(70, 80, java.awt.Image.SCALE_SMOOTH) ;  
@@ -75,12 +75,14 @@ public class Piece extends JButton {
 		setIcon(picture);
 	}
 
-	private static void switchPieces(Piece pieceA, Piece pieceB){
+	public static void switchPieces(Piece pieceA, Piece pieceB){
 		pieceA.name = pieceB.name;
 		pieceA.player = pieceB.player;
 		pieceA.moves = pieceB.moves;
 		pieceA.picture = pieceB.picture;
 		pieceA.setIcon(pieceA.picture);
+		pieceA.player.add(pieceA);
+		pieceB.player.pieces.remove(pieceB);
 		pieceB.name = null;
 		pieceB.moves = null;
 		pieceB.picture = null;
