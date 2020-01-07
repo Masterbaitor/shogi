@@ -9,7 +9,10 @@
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.*; 
+import javax.swing.*;
+
+import javafx.scene.layout.Border;
+
 import java.awt.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage; 
@@ -55,7 +58,16 @@ public class Shogi extends JFrame {
 					player.addPiece(button);
 				}
 				if (x>width-1){
-					player.CapturedZone.put(Piece.CapturedPlacement[x][y], button);
+					if(Piece.CapturedPlacement[x][y] != null){
+						Piece.switchPieces(button, new Piece(Piece.CapturedPlacement[x][y], false));
+						player.CapturedZone.put(Piece.CapturedPlacement[x][y], button);
+						if(player == Player2){
+							button.flip();
+						}
+					}
+					else{
+						button.setBorder(BorderFactory.createEmptyBorder());
+					}
 				}
 				else{
 					Piece.Board.put((float) button.position[0] + (float) button.position[1]/10, button);	
