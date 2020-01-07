@@ -103,7 +103,7 @@ public class Piece extends JButton {
 			if(isHighlighted){
 				switchPieces(this, SelectedPiece);
 				canPromote = isInPromotionZone() || canPromote;
-				if(canPromote && !isPromoted && (!hasPossiblePositions() || (askForPromotion() == JOptionPane.YES_OPTION))){
+				if(canPromote && !isPromoted && (mustPromote() || (askForPromotion() == JOptionPane.YES_OPTION))){
 					promote();
 				}
 				clearHighlights();
@@ -260,7 +260,15 @@ public class Piece extends JButton {
 	}
 
 	private boolean isInPromotionZone(){
-		return ((position[1]>5) && player == Shogi.Player1 || (position[1]<3) && player == Shogi.Player2);
+		return ((name != "King" && name != "Gold") && (isInLastNRanks(3)));
+	}
+
+	private boolean mustPromote(){
+		return ((name == "Pawn" || name == "Lance") && isInLastNRanks(1) || (name == "Knight" && isInLastNRanks(2)));
+	}
+
+	private boolean isInLastNRanks(int n){
+		return (position[1]>(Shogi.height-1-n) && player == Shogi.Player1) || (position[1]<(n) && player == Shogi.Player2);
 	}
 
 	private int askForPromotion(){

@@ -7,6 +7,7 @@
  * @version 1.00 2019/9/16
  */
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.*;
@@ -20,7 +21,7 @@ import java.awt.Panel;
 
 public class Shogi extends JFrame {
 
-	int width=9, height=9;
+	public static int width=9, height=9;
 
 	public static String ResourcesDir = System.getProperty("user.dir")+"\\resources\\";
 
@@ -64,10 +65,12 @@ public class Shogi extends JFrame {
 						if(player == Player2){
 							button.flip();
 						}
+						button.setText("0");
+						button.setIconTextGap(-42);
+						button.setForeground(Color.decode("#af0a0b"));
+						button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 72));
 					}
-					else{
-						button.setBorder(BorderFactory.createEmptyBorder());
-					}
+					button.setBorder(BorderFactory.createEmptyBorder());
 				}
 				else{
 					Piece.Board.put((float) button.position[0] + (float) button.position[1]/10, button);	
@@ -79,12 +82,11 @@ public class Shogi extends JFrame {
 
 	static void buildBoard(){
 		board = new Shogi();
-		
-		board.setSize(1206,900); 
+		board.setSize(1206,896); 
 		board.setLocationRelativeTo(null);
     	board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	board.setVisible(true);
-    	board.setResizable(false);	
+    	board.setResizable(false);
 	}
 	
 	static void buildPlacement(){
@@ -98,7 +100,6 @@ public class Shogi extends JFrame {
 		Piece.placement[3][0] = "Gold";		Piece.placement[3][8] = "Gold";
 		Piece.placement[5][0] = "Gold"; 	Piece.placement[5][8] = "Gold";
 		Piece.placement[4][0] = "King";		Piece.placement[4][8] = "King";
-			
 		Piece.placement[1][1] = "Rook"; 	Piece.placement[7][7] = "Rook";
 		Piece.placement[7][1] = "Bishop";	Piece.placement[1][7] = "Bishop";
 		
