@@ -7,17 +7,10 @@
  * @version 1.00 2019/9/16
  */
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.*;
-
-import javafx.scene.layout.Border;
-
 import java.awt.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage; 
-import java.awt.Panel;
 
 public class Shogi extends JFrame {
 
@@ -64,11 +57,15 @@ public class Shogi extends JFrame {
 						player.CapturedZone.put(Piece.CapturedPlacement[x][y], button);
 						if(player == Player2){
 							button.flip();
+							button.setVerticalTextPosition(JButton.BOTTOM);
+						} 
+						else{
+							button.setVerticalTextPosition(JButton.TOP);
 						}
 						button.setText("0");
-						button.setIconTextGap(-42);
+						button.setIconTextGap(-5);
 						button.setForeground(Color.decode("#af0a0b"));
-						button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 72));
+						button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 30));
 					}
 					button.setBorder(BorderFactory.createEmptyBorder());
 				}

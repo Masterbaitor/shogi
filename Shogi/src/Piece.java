@@ -6,9 +6,6 @@ import java.awt.image.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
-import java.net.URL;
-
-import javax.swing.border.Border;
 import java.awt.geom.AffineTransform;
 
 public class Piece extends JButton {
