@@ -64,8 +64,8 @@ public class Shogi extends JFrame {
 						}
 						button.setText("0");
 						button.setIconTextGap(-5);
-						button.setForeground(Color.decode("#af0a0b"));
-						button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 30));
+						button.setForeground(Color.decode("#ffdd00"));
+						button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
 					}
 					button.setBorder(BorderFactory.createEmptyBorder());
 				}
