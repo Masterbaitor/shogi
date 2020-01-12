@@ -6,7 +6,7 @@ public class Player{
 
     LinkedList<Piece> pieces = new LinkedList<>();
     boolean isMainPlayer;
-    public  Map<String, Piece> CapturedZone = new HashMap <String, Piece>();
+    public  Map<String, CaptureButton> CapturedZone = new HashMap <String, CaptureButton>();
 
     public Player(boolean main){
 
@@ -25,10 +25,11 @@ public class Player{
     }
     
     void capture(Piece p){
-   
-        Piece unpromotedPiece = new Piece(p.name, false);
-        Piece.switchPieces(p, unpromotedPiece);
+
         p.player.pieces.remove(p);
+        Piece unpromotedPiece = new Piece(p.name, false);
+        addPiece(unpromotedPiece);
+        CapturedZone.get(p.name).addPiece(unpromotedPiece);
     }
 
 

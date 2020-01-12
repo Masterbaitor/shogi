@@ -1,7 +1,8 @@
-import javax.swing.*; 
+import javax.swing.*;
 import java.awt.*;
 
 class ImagePanel extends JComponent {
+    static final long serialVersionUID = 1007;
     private Image image;
     public ImagePanel(Image image) {
         this.image = image;

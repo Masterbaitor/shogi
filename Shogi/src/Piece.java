@@ -10,6 +10,8 @@ import java.awt.geom.AffineTransform;
 
 public class Piece extends JButton {
 	
+	static final long serialVersionUID = 10007;
+
 	public static String[][] placement;
 	public static String[][] CapturedPlacement;
 	public static Map<Float, Piece> Board = new HashMap <Float, Piece>();
@@ -95,11 +97,18 @@ public class Piece extends JButton {
 
 	private void onClicked(){
 		boolean isHighlighted = HighlightedPieces.contains(this);
+		boolean dropping = CaptureButton.wasCaptured(SelectedPiece);
 		canPromote = isInPromotionZone();
 		if(player == Player.ActivePlayer || isHighlighted){
 			if(isHighlighted){
+				if(name != null){
+					SelectedPiece.player.capture(this);
+				}
 				switchPieces(this, SelectedPiece);
-				canPromote = isInPromotionZone() || canPromote;
+				canPromote = (isInPromotionZone() || canPromote) && !dropping;
+				if(dropping){
+					player.CapturedZone.get(name).removePiece(SelectedPiece);
+				}
 				if(canPromote && !isPromoted && (mustPromote() || (askForPromotion() == JOptionPane.YES_OPTION))){
 					promote();
 				}
@@ -157,7 +166,7 @@ public class Piece extends JButton {
 		}
 	}
 
-	private void setHighlighted(boolean h){
+	public void setHighlighted(boolean h){
 		highlighted = h;
 		if(highlighted){
 			this.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
@@ -264,8 +273,9 @@ public class Piece extends JButton {
 		return ((name == "Pawn" || name == "Lance") && isInLastNRanks(1) || (name == "Knight" && isInLastNRanks(2)));
 	}
 
-	private boolean isInLastNRanks(int n){
-		return (position[1]>(Shogi.height-1-n) && player == Shogi.Player1) || (position[1]<(n) && player == Shogi.Player2);
+	public boolean isInLastNRanks(int n){
+		Player pl = player == null ? Player.ActivePlayer : player;
+		return (position[1]>(Shogi.height-1-n) && pl == Shogi.Player1) || (position[1]<(n) && pl == Shogi.Player2);
 	}
 
 	private int askForPromotion(){

@@ -14,6 +14,8 @@ import java.awt.image.BufferedImage;
 
 public class Shogi extends JFrame {
 
+	static final long serialVersionUID = 100007;
+
 	public static int width=9, height=9;
 
 	public static String ResourcesDir = System.getProperty("user.dir")+"\\resources\\";
@@ -45,34 +47,24 @@ public class Shogi extends JFrame {
 		for (int y=0; y<height; y++){
 			for (int x=0; x<width+3; x++){
 				Player player = y > 5 ? Player1 : Player2;
-				String name = Piece.placement[x][y];
-				Piece button = new Piece(name, false);
-				button.setPosition(x, height-1-y);
-				if(button.name != null){
-					player.addPiece(button);
-				}
 				if (x>width-1){
+					CaptureButton cbutton = new CaptureButton(Piece.CapturedPlacement[x][y], player);
+					cbutton.setBorder(BorderFactory.createEmptyBorder());
 					if(Piece.CapturedPlacement[x][y] != null){
-						Piece.switchPieces(button, new Piece(Piece.CapturedPlacement[x][y], false));
-						player.CapturedZone.put(Piece.CapturedPlacement[x][y], button);
-						if(player == Player2){
-							button.flip();
-							button.setVerticalTextPosition(JButton.BOTTOM);
-						} 
-						else{
-							button.setVerticalTextPosition(JButton.TOP);
-						}
-						button.setText("0");
-						button.setIconTextGap(-5);
-						button.setForeground(Color.decode("#ffdd00"));
-						button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
+						player.CapturedZone.put(Piece.CapturedPlacement[x][y], cbutton);
 					}
-					button.setBorder(BorderFactory.createEmptyBorder());
+					getContentPane().add(cbutton);
 				}
 				else{
-					Piece.Board.put((float) button.position[0] + (float) button.position[1]/10, button);	
+					String name = Piece.placement[x][y];
+					Piece piece = new Piece(name, false);
+					piece.setPosition(x, height-1-y);
+					if(piece.name != null){
+						player.addPiece(piece);
+					}
+					Piece.Board.put((float) piece.position[0] + (float) piece.position[1]/10, piece);	
+					getContentPane().add(piece);
 				}
-				getContentPane().add(button);
 			}
 		}
 	}
