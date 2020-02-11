@@ -10,7 +10,7 @@ import java.awt.geom.AffineTransform;
 
 public class Piece extends JButton {
 	
-	static final long serialVersionUID = 10007;
+	static final long serialVersionUID = 1007;
 
 	public static String[][] placement;
 	public static String[][] CapturedPlacement;

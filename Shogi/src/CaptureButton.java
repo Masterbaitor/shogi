@@ -5,6 +5,8 @@ import java.awt.event.*;
 
 public class CaptureButton extends JButton {
 
+    static final long serialVersionUID = 10007;
+
     public Player player;
     public String pieceName;
     public LinkedList<Piece> pieces = new LinkedList<>();
