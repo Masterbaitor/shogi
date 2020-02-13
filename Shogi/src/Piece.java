@@ -125,7 +125,11 @@ public class Piece extends JButton {
 					promote();
 				}
 				clearHighlights();
-				Player.ActivePlayer = Player.ActivePlayer == Shogi.Player2 ? Shogi.Player1 : Shogi.Player2; 
+				Player.ActivePlayer = Player.ActivePlayer == Shogi.Player2 ? Shogi.Player1 : Shogi.Player2;
+				if(Player.ActivePlayer.isInCheck())
+				{
+					JOptionPane.showMessageDialog(Shogi.board, "Check!");
+				}
 			}
 			else{
 				SelectedPiece = this;
@@ -188,7 +192,7 @@ public class Piece extends JButton {
 		}
 	}
 
-	private List<int[]> getPossiblePositions(int[] direction, int nspaces) {
+	public List<int[]> getPossiblePositions(int[] direction, int nspaces) {
 
 		List<int[]> possiblePos = new ArrayList<>();
 		int[] xyPosition;		
@@ -201,7 +205,7 @@ public class Piece extends JButton {
 			xyPosition = new int[2];
 			xyPosition[0] = counter*direction[0] + currentPos[0];
 			xyPosition[1] = counter*direction[1] + currentPos[1];
-			Piece pieceAtPosition = (SelectedPiece.position == xyPosition) ? SelectedPiece : Board.get((float) xyPosition[0] + (float) xyPosition[1]/10);
+			Piece pieceAtPosition = (SelectedPiece.position[0] == xyPosition[0] && SelectedPiece.position[1] == xyPosition[1]) ? SelectedPiece : Board.get((float) xyPosition[0] + (float) xyPosition[1]/10);
 			if((xyPosition[0]<0 || xyPosition[0]>8) || (xyPosition[1]<0 || xyPosition[1]>8) || pieceAtPosition.player == player){
 				break;
 			}
@@ -263,30 +267,17 @@ public class Piece extends JButton {
 	}
 
 	public boolean madeIllegalMove(){
+		boolean result;
 		String tempName = SelectedPiece.name;
 		int[] tempPosition = SelectedPiece.position;
-		SelectedPiece.name = null;
+		if(SelectedPiece.name != "King"){
+			SelectedPiece.name = null;}
 		SelectedPiece.position = position;
-		for (Piece p : Player.getOpponentPlayer(Player.ActivePlayer).pieces) {
-			try{
-				if(!p.isCaptured)
-					for (Map.Entry<Integer,Integer> entry : p.moves.entrySet()) {
-						if(p.getPossiblePositions(p.convertDirection(entry.getKey()), entry.getValue()) == null)
-						{
-							SelectedPiece.name = tempName;
-							SelectedPiece.position = tempPosition;
-							return true;
-						}
-					}
-			}
-			catch(NullPointerException e)
-			{
-				continue;
-			}
-		}
-		SelectedPiece.name = tempName;
+		result = Player.ActivePlayer.isInCheck();
+		if(SelectedPiece.name == null){ 
+			SelectedPiece.name = tempName;}
 		SelectedPiece.position = tempPosition;
-		return false;
+		return result;
 	}
 
 	public boolean hasPossiblePositions(){

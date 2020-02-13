@@ -62,6 +62,9 @@ public class Shogi extends JFrame {
 					piece.setPosition(x, height - 1 - y);
 					if (piece.name != null) {
 						player.addPiece(piece);
+						if(piece.name == "King"){
+							player.King = piece;
+						}
 					}
 					Piece.Board.put((float) piece.position[0] + (float) piece.position[1] / 10, piece);
 					getContentPane().add(piece);

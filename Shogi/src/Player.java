@@ -7,6 +7,7 @@ public class Player{
     LinkedList<Piece> pieces = new LinkedList<>();
     boolean isMainPlayer;
     public  Map<String, CaptureButton> CapturedZone = new HashMap <String, CaptureButton>();
+    public Piece King;
 
     public Player(boolean main){
 
@@ -38,5 +39,25 @@ public class Player{
 			return Shogi.Player2;
         }
         return Shogi.Player1;
+    }
+
+    public boolean isInCheck()
+    {
+        for (Piece p : Player.getOpponentPlayer(this).pieces) {
+			try{
+				if(!p.isCaptured)
+					for (Map.Entry<Integer,Integer> entry : p.moves.entrySet()) {
+						if(p.getPossiblePositions(p.convertDirection(entry.getKey()), entry.getValue()) == null)
+						{
+							return true;
+						}
+					}
+			}
+			catch(NullPointerException e)
+			{
+				continue;
+			}
+		}
+		return false;
     }
 }
