@@ -26,11 +26,17 @@ public class Player{
     
     void capture(Piece p){
 
-        p.player.pieces.remove(p);
         Piece unpromotedPiece = new Piece(p.name, false);
+        unpromotedPiece.isCaptured = true;
         addPiece(unpromotedPiece);
         CapturedZone.get(p.name).addPiece(unpromotedPiece);
     }
 
-
+    public static Player getOpponentPlayer(Player player)
+    {
+        if(player == Shogi.Player1){
+			return Shogi.Player2;
+        }
+        return Shogi.Player1;
+    }
 }

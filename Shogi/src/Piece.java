@@ -17,10 +17,12 @@ public class Piece extends JButton {
 	public static Map<Float, Piece> Board = new HashMap <Float, Piece>();
 	public static List<Piece> HighlightedPieces = new ArrayList<Piece>();
 	public static Piece SelectedPiece;
+	public static Piece DestinationPiece;
 
 	public String folder;
 	public boolean isPromoted;
 	public boolean canPromote;
+	public boolean isCaptured;
 	public String name;
 	public ImageIcon picture;
 	public Map <Integer,Integer> moves = new HashMap <Integer,Integer>();
@@ -93,6 +95,8 @@ public class Piece extends JButton {
 		pieceB.canPromote = false;
 		pieceB.isPromoted = false;
 		pieceB.setIcon(pieceB.picture);
+		pieceA.player.pieces.remove(pieceB);
+		pieceA.player.pieces.add(pieceA);
 	}
 
 	private void onClicked(){
@@ -101,6 +105,13 @@ public class Piece extends JButton {
 		canPromote = isInPromotionZone();
 		if(player == Player.ActivePlayer || isHighlighted){
 			if(isHighlighted){
+				DestinationPiece = this;
+				if(madeIllegalMove())
+				{
+					JOptionPane.showMessageDialog(Shogi.board, "Illegal move!");
+					return;
+				}
+				DestinationPiece = null;
 				if(name != null){
 					SelectedPiece.player.capture(this);
 				}
@@ -108,6 +119,7 @@ public class Piece extends JButton {
 				canPromote = (isInPromotionZone() || canPromote) && !dropping;
 				if(dropping){
 					player.CapturedZone.get(name).removePiece(SelectedPiece);
+					SelectedPiece.isCaptured = false;
 				}
 				if(canPromote && !isPromoted && (mustPromote() || (askForPromotion() == JOptionPane.YES_OPTION))){
 					promote();
@@ -177,21 +189,26 @@ public class Piece extends JButton {
 	}
 
 	private List<int[]> getPossiblePositions(int[] direction, int nspaces) {
-		
+
 		List<int[]> possiblePos = new ArrayList<>();
 		int[] xyPosition;		
 		int[] currentPos = position;
-
+		if(DestinationPiece == this)
+		{
+			return possiblePos;
+		}
 		for (int counter = 1; counter < nspaces+1; counter++) {
 			xyPosition = new int[2];
 			xyPosition[0] = counter*direction[0] + currentPos[0];
 			xyPosition[1] = counter*direction[1] + currentPos[1];
-			Piece pieceAtPosition = Board.get((float) xyPosition[0] + (float) xyPosition[1]/10);
+			Piece pieceAtPosition = (SelectedPiece.position == xyPosition) ? SelectedPiece : Board.get((float) xyPosition[0] + (float) xyPosition[1]/10);
 			if((xyPosition[0]<0 || xyPosition[0]>8) || (xyPosition[1]<0 || xyPosition[1]>8) || pieceAtPosition.player == player){
 				break;
 			}
 			possiblePos.add(xyPosition);
 			if(pieceAtPosition.name != null){
+				if(player != Player.ActivePlayer && pieceAtPosition.name == "King")
+					return null;
 				break;
 			}
 		}
@@ -243,6 +260,33 @@ public class Piece extends JButton {
 			break;
 		}
 		return direction;
+	}
+
+	public boolean madeIllegalMove(){
+		String tempName = SelectedPiece.name;
+		int[] tempPosition = SelectedPiece.position;
+		SelectedPiece.name = null;
+		SelectedPiece.position = position;
+		for (Piece p : Player.getOpponentPlayer(Player.ActivePlayer).pieces) {
+			try{
+				if(!p.isCaptured)
+					for (Map.Entry<Integer,Integer> entry : p.moves.entrySet()) {
+						if(p.getPossiblePositions(p.convertDirection(entry.getKey()), entry.getValue()) == null)
+						{
+							SelectedPiece.name = tempName;
+							SelectedPiece.position = tempPosition;
+							return true;
+						}
+					}
+			}
+			catch(NullPointerException e)
+			{
+				continue;
+			}
+		}
+		SelectedPiece.name = tempName;
+		SelectedPiece.position = tempPosition;
+		return false;
 	}
 
 	public boolean hasPossiblePositions(){
