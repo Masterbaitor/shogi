@@ -116,6 +116,9 @@ public class Piece extends JButton {
 					SelectedPiece.player.capture(this);
 				}
 				switchPieces(this, SelectedPiece);
+				if(name == "King"){
+					player.King = this;
+				}
 				canPromote = (isInPromotionZone() || canPromote) && !dropping;
 				if(dropping){
 					player.CapturedZone.get(name).removePiece(SelectedPiece);
@@ -205,14 +208,15 @@ public class Piece extends JButton {
 			xyPosition = new int[2];
 			xyPosition[0] = counter*direction[0] + currentPos[0];
 			xyPosition[1] = counter*direction[1] + currentPos[1];
-			Piece pieceAtPosition = (SelectedPiece.position[0] == xyPosition[0] && SelectedPiece.position[1] == xyPosition[1]) ? SelectedPiece : Board.get((float) xyPosition[0] + (float) xyPosition[1]/10);
+			Piece pieceAtPosition = SelectedPiece.position[0] == xyPosition[0] && SelectedPiece.position[1] == xyPosition[1] ? SelectedPiece : Board.get((float) xyPosition[0] + (float) xyPosition[1]/10);
+			if(pieceAtPosition == SelectedPiece && xyPosition[0] != SelectedPiece.position[0]){
+				pieceAtPosition = new Piece(null, false);
+			}
 			if((xyPosition[0]<0 || xyPosition[0]>8) || (xyPosition[1]<0 || xyPosition[1]>8) || pieceAtPosition.player == player){
 				break;
 			}
 			possiblePos.add(xyPosition);
 			if(pieceAtPosition.name != null){
-				if(player != Player.ActivePlayer && pieceAtPosition.name == "King")
-					return null;
 				break;
 			}
 		}
@@ -268,14 +272,9 @@ public class Piece extends JButton {
 
 	public boolean madeIllegalMove(){
 		boolean result;
-		String tempName = SelectedPiece.name;
 		int[] tempPosition = SelectedPiece.position;
-		if(SelectedPiece.name != "King"){
-			SelectedPiece.name = null;}
 		SelectedPiece.position = position;
 		result = Player.ActivePlayer.isInCheck();
-		if(SelectedPiece.name == null){ 
-			SelectedPiece.name = tempName;}
 		SelectedPiece.position = tempPosition;
 		return result;
 	}

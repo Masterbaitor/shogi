@@ -43,21 +43,22 @@ public class Player{
 
     public boolean isInCheck()
     {
-        for (Piece p : Player.getOpponentPlayer(this).pieces) {
-			try{
-				if(!p.isCaptured)
-					for (Map.Entry<Integer,Integer> entry : p.moves.entrySet()) {
-						if(p.getPossiblePositions(p.convertDirection(entry.getKey()), entry.getValue()) == null)
-						{
-							return true;
-						}
-					}
-			}
-			catch(NullPointerException e)
-			{
-				continue;
-			}
-		}
-		return false;
+        int[] kingPosition = King.position;
+        for (Piece p : getOpponentPlayer(this).pieces) {
+            try{
+                for (Map.Entry<Integer,Integer> entry : p.moves.entrySet()) {
+                    for (int[] position : p.getPossiblePositions(p.convertDirection(entry.getKey()), entry.getValue())){
+                        if(position[0] == kingPosition[0] && position[1] == kingPosition[1]){
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch(NullPointerException e){
+                continue;
+            }
+        }   
+        return false;
     }
+
 }
