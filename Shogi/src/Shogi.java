@@ -18,8 +18,6 @@ import java.awt.image.BufferedImage;
 import javax.swing.JMenu; 
 import javax.swing.JMenuBar; 
 import javax.swing.JMenuItem;
-import java.util.*;
-import java.awt.Component;
 
 public class Shogi extends JFrame {
 

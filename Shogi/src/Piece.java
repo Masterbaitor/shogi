@@ -299,7 +299,6 @@ public class Piece extends JButton {
 					SelectedPiece = null;
 				 	return true;
 				}
-			//	destPiece.onClicked();
 			}
 		}
 		DestinationPiece = null;

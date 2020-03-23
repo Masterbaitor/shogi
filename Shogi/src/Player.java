@@ -30,6 +30,7 @@ public class Player{
         Piece unpromotedPiece = new Piece(p.name, false);
         unpromotedPiece.isCaptured = true;
         addPiece(unpromotedPiece);
+        getOpponentPlayer(this).pieces.remove(p);
         CapturedZone.get(p.name).addPiece(unpromotedPiece);
     }
 
@@ -64,7 +65,7 @@ public class Player{
     public boolean isCheckmated(){
         for (Piece p : pieces){
             try{
-                if (p.hasLegalMoves() /*&& p.name!="King"*/){
+                if (p.hasLegalMoves()){
                     return false;
                 }
             }
