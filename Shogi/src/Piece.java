@@ -131,7 +131,12 @@ public class Piece extends JButton {
 				Player.ActivePlayer = Player.ActivePlayer == Shogi.Player2 ? Shogi.Player1 : Shogi.Player2;
 				if(Player.ActivePlayer.isInCheck())
 				{
-					JOptionPane.showMessageDialog(Shogi.board, "Check!");
+					if(Player.ActivePlayer.isCheckmated()){
+						JOptionPane.showMessageDialog(Shogi.board, "Checkmate!");
+					} 
+					else{
+							JOptionPane.showMessageDialog(Shogi.board, "Check!");
+						}
 				}
 			}
 			else{
@@ -159,7 +164,7 @@ public class Piece extends JButton {
 		} catch (FileNotFoundException e){}
 	}
 	
-	void highlight(){
+	private void highlight(){
 		
 		List<int[]> positionsToHighlight = new ArrayList<>();
 		
@@ -212,7 +217,7 @@ public class Piece extends JButton {
 			if(pieceAtPosition == SelectedPiece && xyPosition[0] != SelectedPiece.position[0]){
 				pieceAtPosition = new Piece(null, false);
 			}
-			if((xyPosition[0]<0 || xyPosition[0]>8) || (xyPosition[1]<0 || xyPosition[1]>8) || pieceAtPosition.player == player){
+			if((xyPosition[0]<0 || xyPosition[0]>8) || (xyPosition[1]<0 || xyPosition[1]>8) || pieceAtPosition.player == player || (CaptureButton.wasCaptured(this) && Player.getOpponentPlayer(player)==pieceAtPosition.player)){
 				break;
 			}
 			possiblePos.add(xyPosition);
@@ -277,6 +282,29 @@ public class Piece extends JButton {
 		result = Player.ActivePlayer.isInCheck();
 		SelectedPiece.position = tempPosition;
 		return result;
+	}
+
+	public boolean hasLegalMoves(){
+	
+		SelectedPiece = this;
+		for (Map.Entry<Integer,Integer> entry : moves.entrySet()){
+			for (int[] posPosition : getPossiblePositions(convertDirection(entry.getKey()), entry.getValue())){
+				Piece destPiece = Piece.Board.get((float) posPosition[0] + (float) posPosition[1]/10);
+				DestinationPiece = destPiece;
+				if (name == "King" && destPiece.name == "Bishop"){
+				System.out.print("fuck you");
+				}
+			if (!destPiece.madeIllegalMove()){
+					DestinationPiece = null;
+					SelectedPiece = null;
+				 	return true;
+				}
+			//	destPiece.onClicked();
+			}
+		}
+		DestinationPiece = null;
+		SelectedPiece = null;
+		return false;
 	}
 
 	public boolean hasPossiblePositions(){

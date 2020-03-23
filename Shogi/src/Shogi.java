@@ -9,10 +9,17 @@
  */
 
 import java.io.*;
+import java.net.*;
+
 import javax.swing.*;
 import java.awt.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import javax.swing.JMenu; 
+import javax.swing.JMenuBar; 
+import javax.swing.JMenuItem;
+import java.util.*;
+import java.awt.Component;
 
 public class Shogi extends JFrame {
 
@@ -28,12 +35,15 @@ public class Shogi extends JFrame {
 	static public Shogi board;
 
 	public Shogi() {
+		
 		Player1 = new Player(true);
 		Player2 = new Player(false);
 		Player.ActivePlayer = Player1;
 		loadBackground(Shogi.ResourcesDir + "woodenbackground.png");
 		getContentPane().setLayout(new GridLayout(width, height));
+		createMenuBar();
 		placePieces();
+
 	}
 
 	private void loadBackground(String filepath) {
@@ -80,6 +90,35 @@ public class Shogi extends JFrame {
 		board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		board.setVisible(true);
 		board.setResizable(false);
+	}
+
+	private void createMenuBar() { 
+		JMenuBar menuBar = new JMenuBar(); 
+		JMenu aboutMenu = new JMenu("About"); 
+		JMenu gameMenu = new JMenu("Game");
+		JMenuItem rulesItem = new JMenuItem("rules"); 
+		rulesItem.addActionListener((event) -> openRules()); 
+		aboutMenu.add(rulesItem); 
+		JMenuItem newgameItem = new JMenuItem("forfeit");
+		newgameItem.addActionListener((event) -> resignMessage());
+		gameMenu.add(newgameItem);
+		menuBar.add(aboutMenu); 
+		menuBar.add(gameMenu);
+		setJMenuBar(menuBar); 
+		
+	}
+
+	private void resignMessage(){
+		JOptionPane.showMessageDialog(Shogi.board, "You lost");
+		System.exit(0);
+		
+	}
+
+	private void openRules(){
+		try{
+			Desktop.getDesktop().browse(new URI("http://ancientchess.com/page/play-shogi.htm"));
+		} catch (IOException e){} catch(URISyntaxException e){};
+	
 	}
 
 	static void buildPlacement() {

@@ -61,4 +61,18 @@ public class Player{
         return false;
     }
 
+    public boolean isCheckmated(){
+        for (Piece p : pieces){
+            try{
+                if (p.hasLegalMoves() /*&& p.name!="King"*/){
+                    return false;
+                }
+            }
+            catch(NullPointerException e){
+                continue;
+            }
+        }
+        return true;
+    }
+
 }
