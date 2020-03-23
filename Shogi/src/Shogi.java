@@ -34,8 +34,8 @@ public class Shogi extends JFrame {
 
 	public Shogi() {
 		
-		Player1 = new Player(true);
-		Player2 = new Player(false);
+		Player1 = new Player(true, JOptionPane.showInputDialog(board, "Please enter Player 1's name: "));
+		Player2 = new Player(false, JOptionPane.showInputDialog(board, "Please enter Player 2's name: "));
 		Player.ActivePlayer = Player1;
 		loadBackground(Shogi.ResourcesDir + "woodenbackground.png");
 		getContentPane().setLayout(new GridLayout(width, height));
@@ -98,18 +98,21 @@ public class Shogi extends JFrame {
 		rulesItem.addActionListener((event) -> openRules()); 
 		aboutMenu.add(rulesItem); 
 		JMenuItem newgameItem = new JMenuItem("forfeit");
-		newgameItem.addActionListener((event) -> resignMessage());
+		newgameItem.addActionListener((event) -> resign());
 		gameMenu.add(newgameItem);
 		menuBar.add(aboutMenu); 
 		menuBar.add(gameMenu);
-		setJMenuBar(menuBar); 
-		
+		setJMenuBar(menuBar);
 	}
 
-	private void resignMessage(){
-		JOptionPane.showMessageDialog(Shogi.board, "You lost");
+	private void resign(){
+		endGame(Player.getOpponentPlayer(Player.ActivePlayer), false);
+	}
+
+	public static void endGame(Player winner, boolean checkmate)
+	{
+		JOptionPane.showMessageDialog(Shogi.board, (checkmate ? "Checkmate! " : "Forfeit. ") + winner.Name + " wins!");
 		System.exit(0);
-		
 	}
 
 	private void openRules(){

@@ -132,11 +132,11 @@ public class Piece extends JButton {
 				if(Player.ActivePlayer.isInCheck())
 				{
 					if(Player.ActivePlayer.isCheckmated()){
-						JOptionPane.showMessageDialog(Shogi.board, "Checkmate!");
+						Shogi.endGame(Player.getOpponentPlayer(Player.ActivePlayer), true);
 					} 
 					else{
-							JOptionPane.showMessageDialog(Shogi.board, "Check!");
-						}
+						JOptionPane.showMessageDialog(Shogi.board, "Check!");
+					}
 				}
 			}
 			else{
@@ -291,9 +291,6 @@ public class Piece extends JButton {
 			for (int[] posPosition : getPossiblePositions(convertDirection(entry.getKey()), entry.getValue())){
 				Piece destPiece = Piece.Board.get((float) posPosition[0] + (float) posPosition[1]/10);
 				DestinationPiece = destPiece;
-				if (name == "King" && destPiece.name == "Bishop"){
-				System.out.print("fuck you");
-				}
 			if (!destPiece.madeIllegalMove()){
 					DestinationPiece = null;
 					SelectedPiece = null;

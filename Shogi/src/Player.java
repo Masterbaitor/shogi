@@ -8,10 +8,11 @@ public class Player{
     boolean isMainPlayer;
     public  Map<String, CaptureButton> CapturedZone = new HashMap <String, CaptureButton>();
     public Piece King;
+    public String Name;
 
-    public Player(boolean main){
-
+    public Player(boolean main, String name){
         isMainPlayer=main;
+        Name = name;
     }
 
     public void addPiece(Piece p){
