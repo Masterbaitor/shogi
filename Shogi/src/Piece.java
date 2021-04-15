@@ -20,6 +20,7 @@ public class Piece extends JButton {
 	public static Piece DestinationPiece;
 
 	public String folder;
+	public boolean hasPromotion;
 	public boolean isPromoted;
 	public boolean canPromote;
 	public boolean isCaptured;
@@ -33,6 +34,7 @@ public class Piece extends JButton {
 	public Piece(String n, boolean promoted){
 		super();
 		folder = Shogi.ResourcesDir + n;
+		hasPromotion = (new File(folder+"\\imagePromoted.png")).exists() && (new File(folder+"\\movesPromoted.txt")).exists();
 		isPromoted = promoted;
 		name = n;
 		ImageIcon imageF = new ImageIcon(folder + (isPromoted ? "\\imagePromoted.png" : "\\image.png"));
@@ -82,6 +84,7 @@ public class Piece extends JButton {
 		pieceA.name = pieceB.name;
 		pieceA.player = pieceB.player;
 		pieceA.folder = pieceB.folder;
+		pieceA.hasPromotion = pieceB.hasPromotion;
 		pieceA.canPromote = pieceB.canPromote;
 		pieceA.isPromoted = pieceB.isPromoted;
 		pieceA.moves = pieceB.moves;
@@ -92,6 +95,7 @@ public class Piece extends JButton {
 		pieceB.picture = null;
 		pieceB.player = null;
 		pieceB.folder = null;
+		pieceB.hasPromotion = false;
 		pieceB.canPromote = false;
 		pieceB.isPromoted = false;
 		pieceB.setIcon(pieceB.picture);
@@ -135,7 +139,7 @@ public class Piece extends JButton {
 			player.CapturedZone.get(name).removePiece(SelectedPiece);
 			SelectedPiece.isCaptured = false;
 		}
-		if(canPromote && !isPromoted && (mustPromote() || (askForPromotion() == JOptionPane.YES_OPTION))){
+		if(hasPromotion && (canPromote && !isPromoted && (mustPromote() || (askForPromotion() == JOptionPane.YES_OPTION)))){
 			promote();
 		}
 		clearHighlights();
@@ -331,7 +335,7 @@ public class Piece extends JButton {
 	}
 
 	private boolean isInPromotionZone(){
-		return ((!name.equals("King") && !name.equals("Gold")) && (isInLastNRanks(3)));
+		return isInLastNRanks(3);
 	}
 
 	private boolean mustPromote(){
