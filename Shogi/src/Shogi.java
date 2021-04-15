@@ -41,8 +41,8 @@ public class Shogi extends JFrame {
 		loadBackground(Shogi.ResourcesDir + "woodenbackground.png");
 		getContentPane().setLayout(new GridLayout(width, height));
 		createMenuBar();
+		setIcon();
 		placePieces();
-
 	}
 
 	private void loadBackground(String filepath) {
@@ -141,6 +141,12 @@ public class Shogi extends JFrame {
 				}
 			} catch (IOException e){}
 		} catch (FileNotFoundException e){}
+	}
+	
+	private void setIcon()
+	{
+		Image frameImage = new ImageIcon(Shogi.ResourcesDir+"\\icon.png").getImage();
+		setIconImage(frameImage);
 	}
 
 	public static void main(String[] args) {
