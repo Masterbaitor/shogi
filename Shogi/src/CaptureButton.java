@@ -31,20 +31,23 @@ public class CaptureButton extends JButton {
     private void onClicked(){
         if(player == Player.ActivePlayer && !pieces.isEmpty()){
             Piece.SelectedPiece = pieces.peekLast();
-            for (Piece button : Piece.Board.values()) {
-                if(button.name != null || Piece.SelectedPiece.name == "Pawn" && ((pawnInFile(button.position[0]) || button.isInLastNRanks(1))) || Piece.SelectedPiece.name == "Lance"){
-                    continue;
+            for (int i = 0; i < Piece.Board.length; i++) {
+                for (int j = 0; j < Piece.Board[i].length; j++) {
+                    Piece button = Piece.Board[i][j];
+                    if(button == null || button.name != null || Piece.SelectedPiece.name.equals("Pawn") && ((pawnInFile(button.position[0]) || button.isInLastNRanks(1))) || Piece.SelectedPiece.name.equals("Lance")){
+                        continue;
+                    }
+                    Piece.HighlightedPieces.add(button);
+                    button.setHighlighted(true);
                 }
-                Piece.HighlightedPieces.add(button);
-                button.setHighlighted(true);
             }
         }
     }
 
     static boolean pawnInFile(int file){
         for(int y = 0; y< Shogi.height; y++){
-            Piece p = Piece.Board.get((float) file + (float) y/10);
-            if(p.player == Player.ActivePlayer && p.name == "Pawn" && !p.isPromoted){
+            Piece p = Piece.Board[file][y];
+            if(p.player == Player.ActivePlayer && p.name.equals("Pawn") && !p.isPromoted){
                 return true;
             }
         }

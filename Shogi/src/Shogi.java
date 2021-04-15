@@ -24,6 +24,7 @@ public class Shogi extends JFrame {
 	static final long serialVersionUID = 107;
 
 	public static int width = 9, height = 9;
+	public static int captureWidth = 3, captureHeight = 9;
 
 	public static String ResourcesDir = System.getProperty("user.dir") + "\\resources\\";
 
@@ -70,11 +71,11 @@ public class Shogi extends JFrame {
 					piece.setPosition(x, height - 1 - y);
 					if (piece.name != null) {
 						player.addPiece(piece);
-						if(piece.name == "King"){
+						if(piece.name.equals("King")){
 							player.King = piece;
 						}
 					}
-					Piece.Board.put((float) piece.position[0] + (float) piece.position[1] / 10, piece);
+					Piece.Board[piece.position[0]][piece.position[1]] = piece;
 					getContentPane().add(piece);
 				}
 			}
@@ -122,58 +123,31 @@ public class Shogi extends JFrame {
 	
 	}
 
-	static void buildPlacement() {
+	static void buildPlacement(String fileName) {
 
-		Piece.placement[0][0] = "Lance";
-		Piece.placement[0][8] = "Lance";
-		Piece.placement[8][0] = "Lance";
-		Piece.placement[8][8] = "Lance";
-		Piece.placement[1][0] = "Knight";
-		Piece.placement[1][8] = "Knight";
-		Piece.placement[7][0] = "Knight";
-		Piece.placement[7][8] = "Knight";
-		Piece.placement[2][0] = "Silver";
-		Piece.placement[2][8] = "Silver";
-		Piece.placement[6][0] = "Silver";
-		Piece.placement[6][8] = "Silver";
-		Piece.placement[3][0] = "Gold";
-		Piece.placement[3][8] = "Gold";
-		Piece.placement[5][0] = "Gold";
-		Piece.placement[5][8] = "Gold";
-		Piece.placement[4][0] = "King";
-		Piece.placement[4][8] = "King";
-		Piece.placement[1][1] = "Rook";
-		Piece.placement[7][7] = "Rook";
-		Piece.placement[7][1] = "Bishop";
-		Piece.placement[1][7] = "Bishop";
-
-		for (int i = 0; i < 9; i++) {
-			Piece.placement[i][2] = "Pawn";
-			Piece.placement[i][6] = "Pawn";
-		}
+		File f = new File(ResourcesDir+"\\"+fileName+".txt");
+		try{
+			BufferedReader in = new BufferedReader(new FileReader(f));
+			try{
+				String line;
+				while (( line = in.readLine()) != null) {
+					String[] placement = line.split(":");
+					String[] coordinateStr = placement[0].split(",");
+					int[] coordinateInt = {Integer.parseInt(coordinateStr[0]), Integer.parseInt(coordinateStr[1])};
+					if(fileName.equals("board"))
+						Piece.placement[coordinateInt[0]][coordinateInt[1]] = placement[1];
+					else if(fileName.equals("capturePile"))
+						Piece.CapturedPlacement[coordinateInt[0]][coordinateInt[1]] = placement[1];
+				}
+			} catch (IOException e){}
+		} catch (FileNotFoundException e){}
 	}
 
-	static void buildCapturedPlacement() {
-		Piece.CapturedPlacement[10][0] = "Gold";
-		Piece.CapturedPlacement[10][8] = "Gold";
-		Piece.CapturedPlacement[9][1] = "Lance";
-		Piece.CapturedPlacement[9][7] = "Lance";
-		Piece.CapturedPlacement[10][1] = "Silver";
-		Piece.CapturedPlacement[10][7] = "Silver";
-		Piece.CapturedPlacement[11][1] = "Knight";
-		Piece.CapturedPlacement[11][7] = "Knight";
-		Piece.CapturedPlacement[9][2] = "Bishop";
-		Piece.CapturedPlacement[9][6] = "Bishop";
-		Piece.CapturedPlacement[10][2] = "Pawn";
-		Piece.CapturedPlacement[10][6] = "Pawn";
-		Piece.CapturedPlacement[11][2] = "Rook";
-		Piece.CapturedPlacement[11][6] = "Rook";
-	}
 	public static void main(String[] args) {
-		Piece.placement = new String[12][9];
-		Piece.CapturedPlacement = new String[12][9];
-		buildPlacement();
-		buildCapturedPlacement();
+		Piece.placement = new String[width][height];
+		Piece.CapturedPlacement = new String[width+captureWidth][captureHeight];
+		buildPlacement("board");
+		buildPlacement("capturePile");
 		buildBoard();
 	}
 

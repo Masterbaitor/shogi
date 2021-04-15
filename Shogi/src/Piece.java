@@ -14,7 +14,7 @@ public class Piece extends JButton {
 
 	public static String[][] placement;
 	public static String[][] CapturedPlacement;
-	public static Map<Float, Piece> Board = new HashMap <Float, Piece>();
+	public static Piece[][] Board = new Piece[Shogi.width][Shogi.height];
 	public static List<Piece> HighlightedPieces = new ArrayList<Piece>();
 	public static Piece SelectedPiece;
 	public static Piece DestinationPiece;
@@ -102,46 +102,51 @@ public class Piece extends JButton {
 	private void onClicked(){
 		boolean isHighlighted = HighlightedPieces.contains(this);
 		boolean dropping = CaptureButton.wasCaptured(SelectedPiece);
-		canPromote = isInPromotionZone();
+		if(name != null)
+			canPromote = isInPromotionZone();
 		if(player == Player.ActivePlayer || isHighlighted){
-			if(isHighlighted){
-				DestinationPiece = this;
-				if(madeIllegalMove())
-				{
-					JOptionPane.showMessageDialog(Shogi.board, "Illegal move!");
-					return;
-				}
-				DestinationPiece = null;
-				if(name != null){
-					SelectedPiece.player.capture(this);
-				}
-				switchPieces(this, SelectedPiece);
-				if(name == "King"){
-					player.King = this;
-				}
-				canPromote = (isInPromotionZone() || canPromote) && !dropping;
-				if(dropping){
-					player.CapturedZone.get(name).removePiece(SelectedPiece);
-					SelectedPiece.isCaptured = false;
-				}
-				if(canPromote && !isPromoted && (mustPromote() || (askForPromotion() == JOptionPane.YES_OPTION))){
-					promote();
-				}
-				clearHighlights();
-				Player.ActivePlayer = Player.ActivePlayer == Shogi.Player2 ? Shogi.Player1 : Shogi.Player2;
-				if(Player.ActivePlayer.isInCheck())
-				{
-					if(Player.ActivePlayer.isCheckmated()){
-						Shogi.endGame(Player.getOpponentPlayer(Player.ActivePlayer), true);
-					} 
-					else{
-						JOptionPane.showMessageDialog(Shogi.board, "Check!");
-					}
-				}
-			}
+			if(isHighlighted)
+				resolveMovement(dropping);
 			else{
 				SelectedPiece = this;
 				highlight();
+			}
+		}
+	}
+
+	private void resolveMovement(boolean dropping)
+	{
+		DestinationPiece = this;
+		if(madeIllegalMove())
+		{
+			JOptionPane.showMessageDialog(Shogi.board, "Illegal move!");
+			return;
+		}
+		DestinationPiece = null;
+		if(name != null){
+			SelectedPiece.player.capture(this);
+		}
+		switchPieces(this, SelectedPiece);
+		if(name.equals("King")){
+			player.King = this;
+		}
+		canPromote = (isInPromotionZone() || canPromote) && !dropping;
+		if(dropping){
+			player.CapturedZone.get(name).removePiece(SelectedPiece);
+			SelectedPiece.isCaptured = false;
+		}
+		if(canPromote && !isPromoted && (mustPromote() || (askForPromotion() == JOptionPane.YES_OPTION))){
+			promote();
+		}
+		clearHighlights();
+		Player.ActivePlayer = Player.ActivePlayer == Shogi.Player2 ? Shogi.Player1 : Shogi.Player2;
+		if(Player.ActivePlayer.isInCheck())
+		{
+			if(Player.ActivePlayer.isCheckmated()){
+				Shogi.endGame(Player.getOpponentPlayer(Player.ActivePlayer), true);
+			} 
+			else{
+				JOptionPane.showMessageDialog(Shogi.board, "Check!");
 			}
 		}
 	}
@@ -176,7 +181,7 @@ public class Piece extends JButton {
 		
 		for (int[] position : positionsToHighlight) {
 
-			Piece p = Piece.Board.get((float) position[0] + (float) position[1]/10);
+			Piece p = Piece.Board[position[0]][position[1]];
 			HighlightedPieces.add(p);
 			p.setHighlighted(true);
 		}
@@ -213,11 +218,13 @@ public class Piece extends JButton {
 			xyPosition = new int[2];
 			xyPosition[0] = counter*direction[0] + currentPos[0];
 			xyPosition[1] = counter*direction[1] + currentPos[1];
-			Piece pieceAtPosition = SelectedPiece.position[0] == xyPosition[0] && SelectedPiece.position[1] == xyPosition[1] ? SelectedPiece : Board.get((float) xyPosition[0] + (float) xyPosition[1]/10);
+			if((xyPosition[0]<0 || xyPosition[0]>8) || (xyPosition[1]<0 || xyPosition[1]>8))
+				break;
+			Piece pieceAtPosition = SelectedPiece.position[0] == xyPosition[0] && SelectedPiece.position[1] == xyPosition[1] ? SelectedPiece : Board[xyPosition[0]][xyPosition[1]];
 			if(pieceAtPosition == SelectedPiece && xyPosition[0] != SelectedPiece.position[0]){
 				pieceAtPosition = new Piece(null, false);
 			}
-			if((xyPosition[0]<0 || xyPosition[0]>8) || (xyPosition[1]<0 || xyPosition[1]>8) || pieceAtPosition.player == player || (CaptureButton.wasCaptured(this) && Player.getOpponentPlayer(player)==pieceAtPosition.player)){
+			if(pieceAtPosition.player == player || (CaptureButton.wasCaptured(this) && Player.getOpponentPlayer(player)==pieceAtPosition.player)){
 				break;
 			}
 			possiblePos.add(xyPosition);
@@ -289,7 +296,7 @@ public class Piece extends JButton {
 		SelectedPiece = this;
 		for (Map.Entry<Integer,Integer> entry : moves.entrySet()){
 			for (int[] posPosition : getPossiblePositions(convertDirection(entry.getKey()), entry.getValue())){
-				Piece destPiece = Piece.Board.get((float) posPosition[0] + (float) posPosition[1]/10);
+				Piece destPiece = Piece.Board[posPosition[0]][posPosition[1]];
 				DestinationPiece = destPiece;
 			if (!destPiece.madeIllegalMove()){
 					DestinationPiece = null;
@@ -324,11 +331,11 @@ public class Piece extends JButton {
 	}
 
 	private boolean isInPromotionZone(){
-		return ((name != "King" && name != "Gold") && (isInLastNRanks(3)));
+		return ((!name.equals("King") && !name.equals("Gold")) && (isInLastNRanks(3)));
 	}
 
 	private boolean mustPromote(){
-		return ((name == "Pawn" || name == "Lance") && isInLastNRanks(1) || (name == "Knight" && isInLastNRanks(2)));
+		return ((name.equals("Pawn") || name.equals("Lance")) && isInLastNRanks(1) || (name.equals("Knight") && isInLastNRanks(2)));
 	}
 
 	public boolean isInLastNRanks(int n){
